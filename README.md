@@ -5,6 +5,8 @@ sig car:
 -  model (bus, truck, car, van) ex. one sig Bus extends Model {}
 -  start direction (north, south, east, west) ex. one sig North extends Direction {}
 -  end direction (north, south, east, west)
+-  start position (Near or Far)
+-  end position (Near or Far)
 
 sig light:
 -  direction one sig North extends Direction {}

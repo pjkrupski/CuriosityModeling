@@ -1,18 +1,18 @@
 # CuriosityModeling
 CS1710GroupProject
-- sig car:
+sig car:
 -  speed type: Int 
 -  model (bus, truck, car, van) ex. one sig Bus extends Model {}
 -  start direction (north, south, east, west) ex. one sig North extends Direction {}
 -  end direction (north, south, east, west)
 
-- sig light:
+sig light:
 -  direction one sig North extends Direction {}
 -  mainLight: Color (red, yellow, green) ex. one sig Red extends Color {}
 -  leftArrow: Color
 -  rightArrow: Color
 
-- sig crosswalk:
+sig crosswalk:
 -  color (white, red)
 -  forwardDirection
 -  reverseDirection

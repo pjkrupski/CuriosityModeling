@@ -1,0 +1,2 @@
+# CuriosityModeling
+CS1710GroupProject

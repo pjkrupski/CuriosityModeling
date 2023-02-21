@@ -23,6 +23,6 @@ sig crosswalk:
 rules: 
 - car can cross when light is green or can cross yellow if speed is above 50
 - can turn when arrow is green/yellow, or on red and crosswalk occupied is false, when changing direction paths, and crosswalk occupied is false
-- cannot turn in any other cas
+- cannot turn in any other case
 - type bus and truck cannot turn on red, spead threshold is lower for crossing yellow lights
-- 
+

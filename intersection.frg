@@ -105,21 +105,21 @@ pred wellformedCrosswalk {
 pred Yellow[pre: State, post: State] {
     some v: Vehical | {
         {v.model = Car} or {v.model = Van} => {
-            v.speed >= 50 => {
+            v.speed >= 5 => {
                 v.side[pre] = Near
                 v.side[post] = Far
             }
-            v.speed < 50 => {
+            v.speed < 5 => {
                 v.side[pre] = Near
                 v.side[post] = Near
             }   
         }
         {v.model = Bus} or {v.model = Truck} => {
-            v.speed >= 35 => {
+            v.speed >= 3 => {
                 v.side[pre] = Near
                 v.side[post] = Far
             } 
-            v.speed < 35 => {
+            v.speed < 3 => {
                 v.side[pre] = Near
                 v.side[post] = Near
             }

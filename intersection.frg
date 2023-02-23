@@ -28,8 +28,8 @@ sig Vehical {
     model: one Model, -- there are different rules for each type of vehical
     startDirection: one Direction, -- where is th vehical coming from?
     endDirection: one Direction, -- where is the vehical going?
-    side: pfunc State -> Postion -- near means the car has not crossed the intersection, far means it has
-    canTurnRight: one Boolean -- can the vehicle legally turn right?
+    side: pfunc State -> Postion, -- near means the car has not crossed the intersection, far means it has
+    canTurnRight: one Boolean, -- can the vehicle legally turn right?
     canTurnLeft: one Boolean -- can the vehicle legally turn left?
 }
 
@@ -40,7 +40,7 @@ sig Light {
     direction: one Direction, -- which direction is the light facing?
     mainLight: one Color, -- what color is the light?
     leftArrow: lone Color, -- what color is the left arrow?
-    rightArrow: lone Color, -- what color is the right arrow?
+    rightArrow: lone Color -- what color is the right arrow?
 }
 
 sig Crosswalk {
@@ -48,6 +48,56 @@ sig Crosswalk {
     forwardDirection: one Direciton, -- first lane the crosswalk crosses
     reverseDirection: one Direction, -- other lane that the crosswalk crosses 
     occupied: one Boolean -- is there a pedestrian in the crosswalk
+}
+
+//Well formed
+
+pred wellformedVehicle {
+    all v: Vehicle | {
+        v.startDirection != v.endDirection
+    }
+}
+
+pred wellformedLight {
+    all l: Light | {
+        --Red main light cannot have both arrows green
+        l.mainLight = Red implies (l.leftArrow = Red or l.rightArrow = Red)
+
+        --Main light cannot be green if both arrows are red
+        (l.leftArrow = Red and l.rightArrow = Red) implies l.mainLight = Red
+    }
+}
+
+pred wellformedCrosswalk {
+
+    all c: Crosswalk | {
+        --Directions must be opposite since crosswalks are straight lines
+        c.forwardDirection = North iff c.forwardDirection = South
+        c.forwardDirection = East iff c.forwardDirection = West
+
+        --Crosswalk must be unoccupied if light is red
+        c.color = Red implies c.occupied = False
+    }   
+
+    --Crosswalk must be red if intersecting traffic light is green
+    all c: Crosswalk | c.forwardDirection = North implies {
+        some l: Light | (l.direction = East or l.direction = West) and l.mainLight != Red implies {
+            c.color = Red
+        }
+
+        /*
+        //TODO: Arrow case
+        some l: Light | (l.direction = North or l.direction = South) and (l.leftArrow != Red or l.leftArrow != Red) implies {
+            c.color = Red
+        }
+        */
+    }
+
+    all c: Crosswalk | c.forwardDirection = East implies {
+        some l: Light | (l.direction = North or l.direction = South) and l.mainLight != Red implies {
+            c.color = Red
+        }
+    }
 }
 
 //rules

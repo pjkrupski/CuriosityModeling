@@ -28,9 +28,7 @@ sig Vehical {
     model: one Model, -- there are different rules for each type of vehical
     startDirection: one Direction, -- where is th vehical coming from?
     endDirection: one Direction, -- where is the vehical going?
-    side: pfunc State -> Postion, -- near means the car has not crossed the intersection, far means it has
-    canTurnRight: one Boolean, -- can the vehicle legally turn right?
-    canTurnLeft: one Boolean -- can the vehicle legally turn left?
+    side: pfunc State -> Postion -- near means the car has not crossed the intersection, far means it has
 }
 
 sig State {
@@ -40,7 +38,9 @@ sig Light {
     direction: one Direction, -- which direction is the light facing?
     mainLight: one Color, -- what color is the light?
     leftArrow: lone Color, -- what color is the left arrow?
-    rightArrow: lone Color -- what color is the right arrow?
+    rightArrow: lone Color, -- what color is the right arrow?
+    hasRightArrow: one Boolean
+    hasLeftArrow: one Boolean
 }
 
 sig Crosswalk {
@@ -50,7 +50,194 @@ sig Crosswalk {
     occupied: one Boolean -- is there a pedestrian in the crosswalk
 }
 
-//Well formed
+//rules
+//helper function
+pred canTurnRightOnYellow[v: Vehical] {
+    {v.model = Car} or {v.model = Van} => {
+        v.speed >= 50 => {
+            v.canTurnRight = True
+        }
+        v.speed < 50 => {
+            v.canTurnRight = False
+        }   
+    }
+    {v.model = Bus} or {v.model = Truck} => {
+        v.speed >= 35 => {
+            v.canTurnRight = True
+        } 
+        v.speed < 35 => {
+            v.canTurnRight = False
+        }
+    }
+}
+pred canTurnLeftOnYellow[v: Vehical] {
+    {v.model = Car} or {v.model = Van} => {
+        v.speed >= 50 => {
+            v.canTurnLeft = True
+        }
+        v.speed < 50 => {
+            v.canTurnLeft = False
+        }   
+    }
+    {v.model = Bus} or {v.model = Truck} => {
+        v.speed >= 35 => {
+            v.canTurnLeft = True
+        } 
+        v.speed < 35 => {
+            v.canTurnLeft = False
+        }
+    }
+}
+pred Yellow[pre: State, post: State, v: Vehical] {
+    {v.model = Car} or {v.model = Van} => {
+        v.speed >= 50 => {
+            v.side[pre] = Near
+            v.side[post] = Far
+        }
+        v.speed < 50 => {
+            v.side[pre] = Near
+            v.side[post] = Near
+        }   
+    }
+    {v.model = Bus} or {v.model = Truck} => {
+        v.speed >= 35 => {
+            v.side[pre] = Near
+            v.side[post] = Far
+        } 
+        v.speed < 35 => {
+            v.side[pre] = Near
+            v.side[post] = Near
+        }
+    }
+}
+//car can cross when light is green or can cross yellow if speed is above 50
+pred canCross[pre: State, post: State] {
+    some l: Light | {
+        //for any one vehical
+        some v: Vehical | {
+            //if the car is a car or van
+            {v.model = Car} or {v.model = Van} => {
+                //if the color of the light is green
+                l.direction = v.startDirection => {
+                    l.mainLight = Green => {
+                        //assuming that for the initial state the car starts at the near
+                        // position
+                        v.side[pre] = Near
+                        v.side[post] = Far
+                    }
+                    l.mainLight = Yellow => {
+                        Yellow[pre, post, v]
+                    }
+                    l.mainLight = Red => {
+                        v.side[pre] = Near
+                        v.side[post] = Near
+                    }
+                }
+            }
+        }
+    }
+
+}
+//can turn when arrow is green/yellow, 
+//or on red and crosswalk occupied is false, when changing direction paths, 
+//and crosswalk occupied is false
+pred canTurn {
+    some l: Light | {
+        some v: Vehical | {
+            l.mainLight = Green => {
+                v.canTurnRight = True
+                v.canTurnLeft = False
+            }
+            l.mainLight = Yellow => {
+                canTurnRightOnYellow[v]
+                canTurnLeftOnYellow[v]
+            }
+            l.mainLight = Red => {
+                l.hasRightArrow = True => {
+                    l.rightArrow = Green => {
+                        v.canTurnRight = True
+                    }
+                    l.rightArrow = Yellow => {
+                        canTurnRightOnYellow[v]
+                    }
+                    l.rightArrow = Red => {
+                        v.canTurnRight = False
+                    }
+                }
+                l.hasLeftArrow = True => {
+                    l.leftArrow = Green => {
+                        v.canTurnLeft = True
+                    }
+                    l.rightArrow = Yellow => {
+                        canTurnLeftOnYellow[v]
+                    }
+                    l.leftArrow = Red => {
+                        v.canTurnLeft = False
+                    }
+                }
+                l.hasRightArrow = False => {
+                    {v.model = Car or v.model = Van} => {
+                        all c: Crosswalk | {
+                            v.startDirection = North => {
+                                c.forwardDirection = West => {
+                                    c.occupied = False => {
+                                        v.canTurnRight = True
+                                    }
+                                    c.occupied = True => {
+                                        v.canTurnRight = False
+                                    }
+                                }
+                            }
+                            v.startDirection = South => {
+                                c.forwardDireciton = East => {
+                                    c.occupied = False => {
+                                        v.canTurnRight = True
+                                    }
+                                    c.occupied  = True => {
+                                        v.canTurnRight = False
+                                    }
+                                }
+                            }
+                            v.startDirection = East => {
+                                c.forwardDirection = North => {
+                                    c.occupied = False => {
+                                        v.canTurnRight = True
+                                    }
+                                    c.occupied = True => {
+                                        v.canTurnRight = False
+                                    }
+                                }
+                            }
+                            v.startDirection = West => {
+                                c.forwardDirection = South => {
+                                    c.occupied = False => {
+                                        v.canTurnRight = True
+                                    }
+                                    c.occupied = True => {
+                                        v.canTurnRight = False
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    {v.model = Bus or v.model = Truck} => {
+                        v.canTurnRight = False
+                    }
+                }
+                l.hasLeftArrow = False => {
+                    v.canTurnLeft = False
+                }
+            }
+        }
+    }
+}
+
+//assuming the vehical can turn
+pred turn[pre]
+
+ //Ed #269
+
+ //Well formed
 
 pred wellformedVehicle {
     all v: Vehicle | {
@@ -96,91 +283,6 @@ pred wellformedCrosswalk {
     all c: Crosswalk | c.forwardDirection = East implies {
         some l: Light | (l.direction = North or l.direction = South) and l.mainLight != Red implies {
             c.color = Red
-        }
-    }
-}
-
-//rules
-//helper function
-pred Yellow[pre: State, post: State] {
-    some v: Vehical | {
-        {v.model = Car} or {v.model = Van} => {
-            v.speed >= 5 => {
-                v.side[pre] = Near
-                v.side[post] = Far
-            }
-            v.speed < 5 => {
-                v.side[pre] = Near
-                v.side[post] = Near
-            }   
-        }
-        {v.model = Bus} or {v.model = Truck} => {
-            v.speed >= 3 => {
-                v.side[pre] = Near
-                v.side[post] = Far
-            } 
-            v.speed < 3 => {
-                v.side[pre] = Near
-                v.side[post] = Near
-            }
-        }
-    }
-}
-//car can cross when light is green or can cross yellow if speed is above 50
-pred canCross[pre: State, post: State] {
-    some l: Light | {
-        //for any one vehical
-        some v: Vehical | {
-            //if the car is a car or van
-            {v.model = Car} or {v.model = Van} => {
-                //if the color of the light is green
-                l.direction = v.startDirection => {
-                    l.color = Green => {
-                        //assuming that for the initial state the car starts at the near
-                        // position
-                        v.side[pre] = Near
-                        v.side[post] = Far
-                    }
-                    l.color = Yellow => {
-                        Yellow[pre, post]
-                    }
-                    l.color = Red => {
-                        v.side[pre] = Near
-                        v.side[post] = Near
-                    }
-                }
-            }
-            {v.model = Bus} or {v.model = Truck} => {
-                l.direction = v.startDirection => {
-                    l.color = Green => {
-                        v.side[pre] = Near
-                        v.side[post] = Far
-                    }
-                    l.color = Yellow => {
-                        Yellow[pre, post]
-                    }
-                    l.color = Red => {
-                        v.side[pre] = Near
-                        v.side[post] = Near
-                    }
-                }
-            }
-
-        }
-    }
-
-}
-//can turn when arrow is green/yellow, 
-//or on red and crosswalk occupied is false, when changing direction paths, 
-//and crosswalk occupied is false
-pred canTurnRight[pre: State, post: State] {
-    some l: Light | {
-        some v: Vehical | {
-            l.color = Green => {
-                v.canTurnRight = True
-                v.canTurnLeft = False
-            }
-            
         }
     }
 }

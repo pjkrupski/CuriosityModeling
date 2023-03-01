@@ -277,13 +277,6 @@ pred wellformedCrosswalk {
         some l: Light | (l.direction = East or l.direction = West) and l.mainLight != Red implies {
             c.color = Red
         }
-
-        /*
-        //TODO: Arrow case
-        some l: Light | (l.direction = North or l.direction = South) and (l.leftArrow != Red or l.leftArrow != Red) implies {
-            c.color = Red
-        }
-        */
     }
 
     all c: Crosswalk | c.forwardDirection = East implies {

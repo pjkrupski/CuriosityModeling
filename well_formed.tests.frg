@@ -5,7 +5,7 @@ open "intersection.frg"
 test suite for wellformedVehicle {
     example validVehicle is wellformedVehicle for {
         State = `S0
-        Vehical = `V0
+        Vehicle = `V0
         North = `North0
         South = `South0
         East = `East0
@@ -16,7 +16,7 @@ test suite for wellformedVehicle {
     }
     example invalidBehicle is not wellformedVehicle for {
         State = `S0
-        Vehical = `V0
+        Vehicle = `V0
         North = `North0
         South = `South0
         East = `East0
@@ -52,7 +52,7 @@ test suite for wellformedLight {
     }
 }
 test suite for wellformedCrosswalk {
-    example validCrosswalk is wellformedCrossWalk for {
+    example validCrosswalk is wellformedCrosswalk for {
         Crosswalk = `C0
         North = `North0
         South = `South0
@@ -63,6 +63,9 @@ test suite for wellformedCrosswalk {
         Yellow = `Yellow0
         Green = `Green0
         White = `White0
+        //TODO: Was missing Color definition causing error
+        //Please specify an upper bound for ancestors of Red.
+        Color = Red + Yellow + Green + White   
         Direction = North + South + East + West
         forwardDirection = `C0 -> North
         reverseDirection = `C0 -> South

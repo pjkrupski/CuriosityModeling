@@ -2,17 +2,6 @@
 
 open "intersection.frg"
 
-test suite for wellformedVehicle {
-    
-}
-
-test suite for wellformedLight {
-    
-}
-
-test suite for wellformedCrosswalk {
-    
-}
 
 test suite for canCross {
 
@@ -20,7 +9,7 @@ test suite for canCross {
     example validTransition1 is {some pre, post: State | canCross[pre, post]} for {
         -- When a vehicle goes through a light, S0 and S1 are identical
         State = `S0 + `S1 
-        Vehicle = `V 
+        Vehicle = `V
         Truck = `Truck  
         South = `South
         North = `North
@@ -35,13 +24,13 @@ test suite for canCross {
         Yellow = `Yellow
         Green = `Green
         White = `White
-        Color = `Red + `Yellow + `Green + `White
+        Color = Red + Yellow + Green + White
 
         //Car specs
         speed = 
         `S0 -> `V -> 2 + 
         `S1 -> `V -> 2
-        
+
         model = `S0 -> `V -> `Truck
         startDirection = `S0 -> `V -> `South + `S1 -> `V -> `South
         endDirection = `S0 -> `V -> `North + `S1 -> `V -> `North

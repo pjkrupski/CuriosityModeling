@@ -114,7 +114,7 @@ pred yellowLight[pre: State, post: State, v: Vehicle] {
     {v.model = Bus} or {v.model = Truck} => {
         v.speed >= 35 => {
             pre.stSide[v] = Near
-            post.side[v] = Far
+            post.stSide[v] = Far
         } 
         v.speed < 35 => {
             pre.stSide[v] = Near
@@ -141,8 +141,8 @@ pred canCross[pre: State, post: State] {
                         yellowLight[pre, post, v]
                     }
                     l.mainLight = Red => {
-                        pre.side[v] = Near
-                        post.side[v] = Near
+                        pre.stSide[v] = Near
+                        post.stSide[v] = Near
                     }
                 }
             }

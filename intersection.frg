@@ -64,59 +64,59 @@ sig Crosswalk {
 
 //rules
 //helper function
-pred canTurnRightOnYellow[v: Vehicle] {
-    {v.model = Car} or {v.model = Van} => {
-        v.speed >= 5 => {
+pred canTurnRightOnYellow[s: State, v: Vehicle] {
+    {s.stModel[v] = Car} or {s.stModel[v] = Van} => {
+        s.stSpeed[v] >= 5 => {
             v.canTurnRight = True
         }
         v.speed < 5 => {
             v.canTurnRight = False
         }   
     }
-    {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 3 => {
+    {s.stModel[v] = Bus} or {s.stModel[v] = Truck} => {
+        s.stSpeed[v] >= 3 => {
             v.canTurnRight = True
         } 
-        v.speed < 3 => {
+        s.stSpeed[v] < 3 => {
             v.canTurnRight = False
         }
     }
 }
-pred canTurnLeftOnYellow[v: Vehicle] {
-    {v.model = Car} or {v.model = Van} => {
-        v.speed >= 5 => {
+pred canTurnLeftOnYellow[s: State, v: Vehicle] {
+    {s.stModel[v] = Car} or {s.stModel[v] = Van} => {
+        s.stSpeed[v] >= 5 => {
             v.canTurnLeft = True
         }
-        v.speed < 5 => {
+        s.stSpeed[v] < 5 => {
             v.canTurnLeft = False
         }   
     }
-    {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 3 => {
+    {s.stModel[v] = Bus} or {s.stModel[v] = Truck} => {
+        s.stSpeed[v] >= 3 => {
             v.canTurnLeft = True
         } 
-        v.speed < 3 => {
+        s.stSpeed[v] < 3 => {
             v.canTurnLeft = False
         }
     }
 }
 pred yellowLight[pre: State, post: State, v: Vehicle] {
-    {v.model = Car} or {v.model = Van} => {
-        v.speed >= 5 => {
+    {pre.stModel[v] = Car} or {pre.stModel[v] = Van} => {
+        pre.stSpeed[v] >= 5 => {
             pre.stSide[v] = Near
             post.stSide[v] = Far
         }
-        v.speed < 5 => {
+        pre.stSpeed[v] < 5 => {
             pre.stSide[v] = Near
             post.stSide[v] = Near
         }   
     }
-    {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 3 => {
+    {pre.stModel[v] = Bus} or {pre.stModel[v] = Truck} => {
+        pre.stSpeed[v] >= 3 => {
             pre.stSide[v] = Near
             post.stSide[v] = Far
         } 
-        v.speed < 3 => {
+        pre.stSpeed[v] < 3 => {
             pre.stSide[v] = Near
             post.stSide[v] = Near
         }

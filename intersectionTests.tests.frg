@@ -38,7 +38,10 @@ test suite for canCross {
         Color = `Red + `Yellow + `Green + `White
 
         //Car specs
-        speed = `S0 -> `V -> 2 + `S1 -> `V -> 2
+        speed = 
+        `S0 -> `V -> 2 + 
+        `S1 -> `V -> 2
+        
         model = `S0 -> `V -> `Truck
         startDirection = `S0 -> `V -> `South + `S1 -> `V -> `South
         endDirection = `S0 -> `V -> `North + `S1 -> `V -> `North

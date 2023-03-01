@@ -25,14 +25,17 @@ abstract sig Boolean {}
 one sig True, False extends Boolean {}
 
 sig State {
-    next: lone State -- the next state
+    next: lone State, -- the next state
+    stvehicle: lone Vehicle, 
+    stlight: lone Light,
+    stcrosswalk: lone Crosswalk 
 }
 
-sig Vehical {
-    speed: one Int, -- how fast is the vehical driving?
-    model: one Model, -- there are different rules for each type of vehical
-    startDirection: one Direction, -- where is th vehical coming from?
-    endDirection: one Direction, -- where is the vehical going?
+sig Vehicle {
+    speed: one Int, -- how fast is the Vehicle driving?
+    model: one Model, -- there are different rules for each type of Vehicle
+    startDirection: one Direction, -- where is th Vehicle coming from?
+    endDirection: one Direction, -- where is the Vehicle going?
     side: pfunc State -> Position, -- near means the car has not crossed the intersection, far means it has
     canTurnRight: one Boolean,
     canTurnLeft: one Boolean
@@ -56,7 +59,7 @@ sig Crosswalk {
 
 //rules
 //helper function
-pred canTurnRightOnYellow[v: Vehical] {
+pred canTurnRightOnYellow[v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
         v.speed >= 50 => {
             v.canTurnRight = True
@@ -74,7 +77,7 @@ pred canTurnRightOnYellow[v: Vehical] {
         }
     }
 }
-pred canTurnLeftOnYellow[v: Vehical] {
+pred canTurnLeftOnYellow[v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
         v.speed >= 50 => {
             v.canTurnLeft = True
@@ -92,7 +95,7 @@ pred canTurnLeftOnYellow[v: Vehical] {
         }
     }
 }
-pred yellowLight[pre: State, post: State, v: Vehical] {
+pred yellowLight[pre: State, post: State, v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
         v.speed >= 50 => {
             v.side[pre] = Near
@@ -117,8 +120,8 @@ pred yellowLight[pre: State, post: State, v: Vehical] {
 //car can cross when light is green or can cross yellow if speed is above 50
 pred canCross[pre: State, post: State] {
     some l: Light | {
-        //for any one vehical
-        some v: Vehical | {
+        //for any one Vehicle
+        some v: Vehicle | {
             //if the car is a car or van
             {v.model = Car} or {v.model = Van} => {
                 //if the color of the light is green
@@ -146,7 +149,7 @@ pred canCross[pre: State, post: State] {
 //and crosswalk occupied is false
 pred canTurn {
     some l: Light | {
-        some v: Vehical | {
+        some v: Vehicle | {
             l.mainLight = Green => {
                 v.canTurnRight = True
                 v.canTurnLeft = False
@@ -235,7 +238,7 @@ pred canTurn {
     }
 }
 
-//assuming the vehical can turn
+//assuming the Vehicle can turn
 
 
  //Ed #269
@@ -243,7 +246,7 @@ pred canTurn {
  //Well formed
 
 pred wellformedVehicle {
-    all v: Vehical | {
+    all v: Vehicle | {
         v.startDirection != v.endDirection
     }
 }

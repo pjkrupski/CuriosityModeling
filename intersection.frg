@@ -33,7 +33,13 @@ sig State {
     stSide: pfunc Vehicle -> Position,
     stvehicle: lone Vehicle, 
     stlight: lone Light,
-    stcrosswalk: lone Crosswalk 
+    stcrosswalk: lone Crosswalk,
+    //methods
+    stSpeed: pfunc Vehicle -> Int,
+    stModel: pfunc Vehicle -> Direciton,
+    stStartDir: pfunc Vehicle -> Direction,
+    stEndDir: pfunc Vehicle -> Direction,
+    stSide: pfunc Side -> Position
 }
 
 sig Vehicle {
@@ -41,7 +47,6 @@ sig Vehicle {
     model: one Model, -- there are different rules for each type of Vehicle
     startDirection: one Direction, -- where is th Vehicle coming from?
     endDirection: one Direction, -- where is the Vehicle going?
-    side: pfunc State -> Position, -- near means the car has not crossed the intersection, far means it has
     canTurnRight: one Boolean,
     canTurnLeft: one Boolean
 }
@@ -102,21 +107,21 @@ pred canTurnLeftOnYellow[v: Vehicle] {
 }
 pred yellowLight[pre: State, post: State, v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 5 => {
+        v.speed >= 50 => {
             v.side[pre] = Near
             v.side[post] = Far
         }
-        v.speed < 5 => {
+        v.speed < 50 => {
             v.side[pre] = Near
             v.side[post] = Near
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 3 => {
+        v.speed >= 35 => {
             v.side[pre] = Near
             v.side[post] = Far
         } 
-        v.speed < 3 => {
+        v.speed < 35 => {
             v.side[pre] = Near
             v.side[post] = Near
         }
@@ -128,21 +133,21 @@ pred canCross[pre: State, post: State] {
         //for any one Vehicle
         some v: Vehicle | {
             //if the car is a car or van
-            {v.model = Car} or {v.model = Van} => {
+            {pre.stModel[v] = Car} or {pre.stModel[v] = Van} => {
                 //if the color of the light is green
                 l.direction = v.startDirection => {
                     l.mainLight = Green => {
                         //assuming that for the initial state the car starts at the near
                         // position
-                        v.side[pre] = Near
-                        v.side[post] = Far
+                        pre.stSide[v] = Near
+                        post.stSide[v] = Far
                     }
                     l.mainLight = Yellow => {
                         yellowLight[pre, post, v]
                     }
                     l.mainLight = Red => {
-                        v.side[pre] = Near
-                        v.side[post] = Near
+                        pre.side[v] = Near
+                        post.side[v] = Near
                     }
                 }
             }

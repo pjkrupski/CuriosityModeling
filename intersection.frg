@@ -26,11 +26,6 @@ one sig True, False extends Boolean {}
 
 sig State {
     next: lone State, -- the next state
-    stSpeed: pfunc Vehicle -> Int,
-    stModel: pfunc Vehicle -> Model,
-    stStartDir: pfunc Vehicle -> Direction,
-    stEndDir: pfunc Vehicle -> Direction,
-    stSide: pfunc Vehicle -> Position,
     stvehicle: lone Vehicle, 
     stlight: lone Light,
     stcrosswalk: lone Crosswalk,

@@ -1,5 +1,4 @@
 #lang forge/bsl
-
 abstract sig Model{}
 one sig Car extends Model{}
 one sig Bus extends Model{}
@@ -25,29 +24,32 @@ one sig Far extends Position{}
 abstract sig Boolean {}
 one sig True, False extends Boolean {}
 
+sig State {
+    next: lone State -- the next state
+}
+
 sig Vehical {
     speed: one Int, -- how fast is the vehical driving?
     model: one Model, -- there are different rules for each type of vehical
     startDirection: one Direction, -- where is th vehical coming from?
     endDirection: one Direction, -- where is the vehical going?
-    side: pfunc State -> Postion -- near means the car has not crossed the intersection, far means it has
+    side: pfunc State -> Position, -- near means the car has not crossed the intersection, far means it has
+    canTurnRight: one Boolean,
+    canTurnLeft: one Boolean
 }
 
-sig State {
-    next: lone State -- the next state
-}
 sig Light {
     direction: one Direction, -- which direction is the light facing?
     mainLight: one Color, -- what color is the light?
     leftArrow: lone Color, -- what color is the left arrow?
     rightArrow: lone Color, -- what color is the right arrow?
-    hasRightArrow: one Boolean
-    hasLeftArrow: one Boolean
+    hasRightArrow: one Boolean, -- does the light have right arrow?
+    hasLeftArrow: lone Boolean --does the light have a left arrow?
 }
 
 sig Crosswalk {
     color: one Color, -- can the pedestrian walk or not?
-    forwardDirection: one Direciton, -- first lane the crosswalk crosses
+    forwardDirection: one Direction, -- first lane the crosswalk crosses
     reverseDirection: one Direction, -- other lane that the crosswalk crosses 
     occupied: one Boolean -- is there a pedestrian in the crosswalk
 }
@@ -90,7 +92,7 @@ pred canTurnLeftOnYellow[v: Vehical] {
         }
     }
 }
-pred Yellow[pre: State, post: State, v: Vehical] {
+pred yellowLight[pre: State, post: State, v: Vehical] {
     {v.model = Car} or {v.model = Van} => {
         v.speed >= 50 => {
             v.side[pre] = Near
@@ -128,7 +130,7 @@ pred canCross[pre: State, post: State] {
                         v.side[post] = Far
                     }
                     l.mainLight = Yellow => {
-                        Yellow[pre, post, v]
+                        yellowLight[pre, post, v]
                     }
                     l.mainLight = Red => {
                         v.side[pre] = Near
@@ -138,7 +140,6 @@ pred canCross[pre: State, post: State] {
             }
         }
     }
-
 }
 //can turn when arrow is green/yellow, 
 //or on red and crosswalk occupied is false, when changing direction paths, 
@@ -191,7 +192,7 @@ pred canTurn {
                                 }
                             }
                             v.startDirection = South => {
-                                c.forwardDireciton = East => {
+                                c.forwardDirection = East => {
                                     c.occupied = False => {
                                         v.canTurnRight = True
                                     }
@@ -235,14 +236,14 @@ pred canTurn {
 }
 
 //assuming the vehical can turn
-pred turn[pre]
+
 
  //Ed #269
 
  //Well formed
 
 pred wellformedVehicle {
-    all v: Vehicle | {
+    all v: Vehical | {
         v.startDirection != v.endDirection
     }
 }
@@ -261,8 +262,8 @@ pred wellformedCrosswalk {
 
     all c: Crosswalk | {
         --Directions must be opposite since crosswalks are straight lines
-        c.forwardDirection = North iff c.forwardDirection = South
-        c.forwardDirection = East iff c.forwardDirection = West
+        c.forwardDirection = North iff c.reverseDirection = South
+        c.forwardDirection = East iff c.reverseDirection = West
 
         --Crosswalk must be unoccupied if light is red
         c.color = Red implies c.occupied = False

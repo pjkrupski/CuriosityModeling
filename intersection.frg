@@ -66,57 +66,57 @@ sig Crosswalk {
 //helper function
 pred canTurnRightOnYellow[v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
+        v.speed >= 5 => {
             v.canTurnRight = True
         }
-        v.speed < 50 => {
+        v.speed < 5 => {
             v.canTurnRight = False
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
+        v.speed >= 3 => {
             v.canTurnRight = True
         } 
-        v.speed < 35 => {
+        v.speed < 3 => {
             v.canTurnRight = False
         }
     }
 }
 pred canTurnLeftOnYellow[v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
+        v.speed >= 5 => {
             v.canTurnLeft = True
         }
-        v.speed < 50 => {
+        v.speed < 5 => {
             v.canTurnLeft = False
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
+        v.speed >= 3 => {
             v.canTurnLeft = True
         } 
-        v.speed < 35 => {
+        v.speed < 3 => {
             v.canTurnLeft = False
         }
     }
 }
 pred yellowLight[pre: State, post: State, v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
+        v.speed >= 5 => {
             pre.stSide[v] = Near
             post.stSide[v] = Far
         }
-        v.speed < 50 => {
+        v.speed < 5 => {
             pre.stSide[v] = Near
             post.stSide[v] = Near
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
+        v.speed >= 3 => {
             pre.stSide[v] = Near
             post.stSide[v] = Far
         } 
-        v.speed < 35 => {
+        v.speed < 3 => {
             pre.stSide[v] = Near
             post.stSide[v] = Near
         }

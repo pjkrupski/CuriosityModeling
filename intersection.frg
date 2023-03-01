@@ -31,10 +31,10 @@ sig State {
     stcrosswalk: lone Crosswalk,
     //methods
     stSpeed: pfunc Vehicle -> Int,
-    stModel: pfunc Vehicle -> Direciton,
+    stModel: pfunc Vehicle -> Model,
     stStartDir: pfunc Vehicle -> Direction,
     stEndDir: pfunc Vehicle -> Direction,
-    stSide: pfunc Side -> Position
+    stSide: pfunc Vehicle -> Position
 }
 
 sig Vehicle {

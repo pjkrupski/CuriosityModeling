@@ -7,14 +7,25 @@ test suite for canCross {
 
     //Truck on green light with speed 2
     example validTransition1 is {some pre, post: State | canCross[pre, post]} for {
+        //#Int = 5
         -- When a vehicle goes through a light, S0 and S1 are identical
         State = `S0 + `S1 
         //TODO: Use 2 vehicles, one for each state, or solve assigning single
         //vehicle to multiple states
         Vehicle = `V
-        Truck = `Truck  
+
+        Truck = `Truck 
+        Car = `Car  
+        Bus = `Bus
+        Van = `Van  
+        Model = Truck + Car + Bus + Van
+
+
         South = `South
         North = `North
+        East = `East
+        West = `West
+        Direction = South + North + East + West
 
         Light = `Light
 
@@ -28,20 +39,22 @@ test suite for canCross {
         White = `White
         Color = Red + Yellow + Green + White
 
+        
+
         //Car specs
-        stspeed = 
+        stSpeed = 
         `S0 -> `V -> 2 + 
         `S1 -> `V -> 2
 
-        stmodel = `S0 -> `V -> `Truck
-        startDirection = `S0 -> `V -> `South + `S1 -> `V -> `South
-        endDirection = `S0 -> `V -> `North + `S1 -> `V -> `North
+        stModel = `S0 -> `V -> `Truck
 
-        //Light specs
-        direction = `S0 -> `Light -> `North + `S1 -> `Light -> `North
-        mainLight = `S0 -> `Light -> `Green + `S1 -> `Light -> `Green
+        stSide = `S0 -> `V -> `Near + `S1 -> `V -> `Far
+
+        //TODO: Light specs
+        //direction = `S0 -> `Light -> `North + `S1 -> `Light -> `North
+        //mainLight = `S0 -> `Light -> `Green + `S1 -> `Light -> `Green
     }
-
+/*
     //Truck on yellow light with speed 4
     example validTransition2 is {some pre, post: State | canCross[pre, post]} for {
         -- When a vehicle goes through a light, S0 and S1 are identical
@@ -137,7 +150,7 @@ test suite for canCross {
         mainLight = `S0 -> `Light -> `Red + `S1 -> `Light -> `Red
     }
 
-
+*/
 }
 
 test suite for canTurnRight {

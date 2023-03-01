@@ -82,6 +82,7 @@ test suite for canCross {
 
     //Car takes Uturn in intersection
     example invalidTransition1 is not {some pre, post: State | canCross[pre, post]} for {
+        //Sig and object names need to be different if using js visualization
         State = `S0 + `S1 
         Vehicle = `V 
         Truck = `Car

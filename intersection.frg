@@ -1,3 +1,5 @@
+#lang forge/bsl
+
 abstract sig Model{}
 one sig Car extends Model{}
 one sig Bus extends Model{}

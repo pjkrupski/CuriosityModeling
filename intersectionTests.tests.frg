@@ -6,12 +6,11 @@ open "intersection.frg"
 test suite for canCross {
 
     //Truck on green light with speed 2
+    -- When a vehicle goes through a light, S0 and S1 are identical
     example validTransition1 is {some pre, post: State | canCross[pre, post]} for {
         //#Int = 5
-        -- When a vehicle goes through a light, S0 and S1 are identical
+        //Test Setup
         State = `S0 + `S1 
-        //TODO: Use 2 vehicles, one for each state, or solve assigning single
-        //vehicle to multiple states
         Vehicle = `V
 
         Truck = `Truck 
@@ -19,7 +18,6 @@ test suite for canCross {
         Bus = `Bus
         Van = `Van  
         Model = Truck + Car + Bus + Van
-
 
         South = `South
         North = `North
@@ -39,9 +37,7 @@ test suite for canCross {
         White = `White
         Color = Red + Yellow + Green + White
 
-        
-
-        //Car specs
+        //Test specs
         stSpeed = 
         `S0 -> `V -> 2 + 
         `S1 -> `V -> 2
@@ -54,15 +50,26 @@ test suite for canCross {
         //direction = `S0 -> `Light -> `North + `S1 -> `Light -> `North
         //mainLight = `S0 -> `Light -> `Green + `S1 -> `Light -> `Green
     }
-/*
+
     //Truck on yellow light with speed 4
     example validTransition2 is {some pre, post: State | canCross[pre, post]} for {
         -- When a vehicle goes through a light, S0 and S1 are identical
+          
+        //Test Setup
         State = `S0 + `S1 
-        Vehicle = `V 
-        Truck = `Truck  
+        Vehicle = `V
+
+        Truck = `Truck 
+        Car = `Car  
+        Bus = `Bus
+        Van = `Van  
+        Model = Truck + Car + Bus + Van
+
         South = `South
         North = `North
+        East = `East
+        West = `West
+        Direction = South + North + East + West
 
         Light = `Light
 
@@ -74,7 +81,7 @@ test suite for canCross {
         Yellow = `Yellow
         Green = `Green
         White = `White
-        Color = `Red + `Yellow + `Green + `White
+        Color = Red + Yellow + Green + White
 
         //Vehicle specs
         speed = `S0 -> `V -> 2 + `S1 -> `V -> 0
@@ -90,11 +97,21 @@ test suite for canCross {
     //Car takes Uturn in intersection
     example invalidTransition1 is not {some pre, post: State | canCross[pre, post]} for {
         //Sig and object names need to be different if using js visualization
+        //Test Setup
         State = `S0 + `S1 
-        Vehicle = `V 
-        Truck = `Car
+        Vehicle = `V
+
+        Truck = `Truck 
+        Car = `Car  
+        Bus = `Bus
+        Van = `Van  
+        Model = Truck + Car + Bus + Van
+
         South = `South
         North = `North
+        East = `East
+        West = `West
+        Direction = South + North + East + West
 
         Light = `Light
 
@@ -106,7 +123,7 @@ test suite for canCross {
         Yellow = `Yellow
         Green = `Green
         White = `White
-        Color = `Red + `Yellow + `Green + `White
+        Color = Red + Yellow + Green + White
 
         //Vehicle specs
         speed = `S0 -> `V -> 2 + `S1 -> `V -> 2
@@ -121,11 +138,21 @@ test suite for canCross {
 
     //Car goes through redlight
     example invalidTransition2 is not {some pre, post: State | canCross[pre, post]} for {
+        //Test Setup
         State = `S0 + `S1 
-        Vehicle = `V 
-        Truck = `Truck  
+        Vehicle = `V
+
+        Truck = `Truck 
+        Car = `Car  
+        Bus = `Bus
+        Van = `Van  
+        Model = Truck + Car + Bus + Van
+
         South = `South
         North = `North
+        East = `East
+        West = `West
+        Direction = South + North + East + West
 
         Light = `Light
 
@@ -137,7 +164,7 @@ test suite for canCross {
         Yellow = `Yellow
         Green = `Green
         White = `White
-        Color = `Red + `Yellow + `Green + `White
+        Color = Red + Yellow + Green + White
 
         //Vehicle specs
         speed = `S0 -> `V -> 2 + `S1 -> `V -> 4
@@ -149,8 +176,6 @@ test suite for canCross {
         direction = `S0 -> `Light -> `North + `S1 -> `Light -> `North
         mainLight = `S0 -> `Light -> `Red + `S1 -> `Light -> `Red
     }
-
-*/
 }
 
 test suite for canTurnRight {

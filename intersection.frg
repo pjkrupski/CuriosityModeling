@@ -102,23 +102,23 @@ pred canTurnLeftOnYellow[v: Vehicle] {
 }
 pred yellowLight[pre: State, post: State, v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
-            v.side[pre] = Near
-            v.side[post] = Far
+        v.speed >= 5 => {
+            pre.stSide[v] = Near
+            post.stSide[v] = Far
         }
-        v.speed < 50 => {
-            v.side[pre] = Near
-            v.side[post] = Near
+        v.speed < 5 => {
+            pre.stSide[v] = Near
+            post.stSide[v] = Near
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
-            v.side[pre] = Near
-            v.side[post] = Far
+        v.speed >= 3 => {
+            pre.stSide[v] = Near
+            post.stSide[v] = Far
         } 
-        v.speed < 35 => {
-            v.side[pre] = Near
-            v.side[post] = Near
+        v.speed < 3 => {
+            pre.stSide[v] = Near
+            post.stSide[v] = Near
         }
     }
 }
@@ -141,8 +141,8 @@ pred canCross[pre: State, post: State] {
                         yellowLight[pre, post, v]
                     }
                     l.mainLight = Red => {
-                        pre.side[v] = Near
-                        post.side[v] = Near
+                        pre.stSide[v] = Near
+                        post.stSide[v] = Near
                     }
                 }
             }

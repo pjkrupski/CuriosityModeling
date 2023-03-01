@@ -26,6 +26,11 @@ one sig True, False extends Boolean {}
 
 sig State {
     next: lone State, -- the next state
+    stSpeed: pfunc Vehicle -> Int,
+    stModel: pfunc Vehicle -> Model,
+    stStartDir: pfunc Vehicle -> Direction,
+    stEndDir: pfunc Vehicle -> Direction,
+    stSide: pfunc Vehicle -> Position,
     stvehicle: lone Vehicle, 
     stlight: lone Light,
     stcrosswalk: lone Crosswalk 
@@ -61,57 +66,57 @@ sig Crosswalk {
 //helper function
 pred canTurnRightOnYellow[v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
+        v.speed >= 5 => {
             v.canTurnRight = True
         }
-        v.speed < 50 => {
+        v.speed < 5 => {
             v.canTurnRight = False
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
+        v.speed >= 3 => {
             v.canTurnRight = True
         } 
-        v.speed < 35 => {
+        v.speed < 3 => {
             v.canTurnRight = False
         }
     }
 }
 pred canTurnLeftOnYellow[v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
+        v.speed >= 5 => {
             v.canTurnLeft = True
         }
-        v.speed < 50 => {
+        v.speed < 5 => {
             v.canTurnLeft = False
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
+        v.speed >= 3 => {
             v.canTurnLeft = True
         } 
-        v.speed < 35 => {
+        v.speed < 3 => {
             v.canTurnLeft = False
         }
     }
 }
 pred yellowLight[pre: State, post: State, v: Vehicle] {
     {v.model = Car} or {v.model = Van} => {
-        v.speed >= 50 => {
+        v.speed >= 5 => {
             v.side[pre] = Near
             v.side[post] = Far
         }
-        v.speed < 50 => {
+        v.speed < 5 => {
             v.side[pre] = Near
             v.side[post] = Near
         }   
     }
     {v.model = Bus} or {v.model = Truck} => {
-        v.speed >= 35 => {
+        v.speed >= 3 => {
             v.side[pre] = Near
             v.side[post] = Far
         } 
-        v.speed < 35 => {
+        v.speed < 3 => {
             v.side[pre] = Near
             v.side[post] = Near
         }

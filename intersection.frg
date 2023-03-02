@@ -36,8 +36,8 @@ sig State {
     stEndDir: pfunc Vehicle -> Direction,
     stSide: pfunc Vehicle -> Position,
     stLightColor: pfunc Light -> Color,
-    stLightDir: pfunc Light -> Direction
-    stRightArrColor: pfunc Light -> Color
+    stLightDir: pfunc Light -> Direction,
+    stRightArrColor: pfunc Light -> Color,
     stLeftArrColor: pfunc Light -> Color
 }
 

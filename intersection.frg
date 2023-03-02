@@ -132,27 +132,25 @@ pred canCross[pre: State, post: State] {
         //for any one Vehicle
         some v: Vehicle | {
             //if the car is a car or van
-            {pre.stModel[v] = Car} or {pre.stModel[v] = Van} => {
-                //if the color of the light is green
-                pre.stLightDir[l] = v.startDirection => {
-                    pre.stLightColor[l] = Green => {
-                        //assuming that for the initial state the car starts at the near
-                        // position
-                        pre.stSide[v] = Near
-                        post.stSide[v] = Far
-                    }
-                    pre.stLightColor[l] = Yellow => {
-                        yellowLight[pre, post, v]
-                    }
-                    pre.stLightColor[l] = Red => {
-                        pre.stSide[v] = Near
-                        post.stSide[v] = Near
-                    }
-                }
+            pre.stLightDir[l] = v.startDirection
+            //if the color of the light is green
+            pre.stLightColor[l] = Green => {
+                //assuming that for the initial state the car starts at the near
+                // position
+                pre.stSide[v] = Near
+                post.stSide[v] = Far
+            }
+            pre.stLightColor[l] = Yellow => {
+                yellowLight[pre, post, v]
+            }
+            pre.stLightColor[l] = Red => {
+                pre.stSide[v] = Near
+                post.stSide[v] = Near
             }
         }
     }
 }
+
 //can turn when arrow is green/yellow, 
 //or on red and crosswalk occupied is false, when changing direction paths, 
 //and crosswalk occupied is false
@@ -164,29 +162,29 @@ pred canTurn[s: State] {
                 v.canTurnLeft = False
             }
             s.stLightColor[l] = Yellow => {
-                canTurnRightOnYellow[v]
-                canTurnLeftOnYellow[v]
+                canTurnRightOnYellow[s,v]
+                canTurnLeftOnYellow[s,v]
             }
             s.stLightColor[l] = Red => {
-                l.hasRightArrow = True => {
-                    s.stRightArrColor[l] = Green => {
+                (l.hasRightArrow = True) and (l.hasLeftArrow = True) => {
+                    (s.stRightArrColor[l] = Green) => {
                         v.canTurnRight = True
                     }
-                    s.stRightArrColor[l] = Yellow => {
-                        canTurnRightOnYellow[v]
+                    (s.stRightArrColor[l] = Yellow) => {
+                        canTurnRightOnYellow[s,v]
                     }
-                    s.stRightArrColor[l] = Red => {
+                    (s.stRightArrColor[l] = Red) => {
                         v.canTurnRight = False
                     }
                 }
-                l.hasLeftArrow = True => {
-                    s.stLeftArrColor[l] = Green => {
+                (l.hasLeftArrow = True) and (l.hasRightArrow = True)=> {
+                    (s.stLeftArrColor[l] = Green) => {
                         v.canTurnLeft = True
                     }
-                    s.stLeftArrColor[l] = Yellow => {
-                        canTurnLeftOnYellow[v]
+                    (s.stLeftArrColor[l] = Yellow) => {
+                        canTurnLeftOnYellow[s,v]
                     }
-                    s.stLeftArrColor[l] = Red => {
+                    (s.stLeftArrColor[l] = Red) => {
                         v.canTurnLeft = False
                     }
                 }
@@ -300,7 +298,7 @@ run {
      wellformedVehicle
      wellformedLight
      wellformedCrosswalk
-     canCross
+     //canCross
  } for exactly 5 State, exactly 5 Vehicle, exactly 4 Light, exactly 2 Crosswalk
    for {next is linear}
 

@@ -134,7 +134,7 @@ test suite for canCross {
         stStartDir = `S0 -> `V -> `South + `S1 -> `V -> `North
         stEndDir = `S0 -> `V -> `North + `S1 -> `V -> `South
 
-        stSide = `S0 -> `V -> Near + `S1 -> `V -> Near
+        stSide = `S0 -> `V -> Near + `S1 -> `V -> Far
 
         //Light specs
         stLightDir = `S0 -> `Light -> `North + `S1 -> `Light -> `North
@@ -142,7 +142,7 @@ test suite for canCross {
     }
 
     //Car stays in place on Green light 
-    example validTransition4 is {some pre, post: State | canCross[pre, post]} for {
+    example validTransition4 is not {some pre, post: State | canCross[pre, post]} for {
         //Sig and object names need to be different if using js visualization
         //Test Setup
         State = `S0 + `S1 
@@ -224,8 +224,8 @@ test suite for canCross {
 
         stSide = `S0 -> `V -> `Near + `S1 -> `V -> `Far
 
-       // startDirection = `V -> `Near
-       // endDirection = `V -> `Far
+        startDirection = `V -> `South
+        endDirection = `V -> `South
 
         //Light specs
         stLightDir = `S0 -> `Light -> `North + `S1 -> `Light -> `North
@@ -277,10 +277,11 @@ test suite for canTurn {
         stSide = `S0 -> `V -> `Near 
         stStartDir = `S0 -> `V -> `South
         stEndDir = `S0 -> `V -> `East 
-
+        startDirection = `V -> `South
+        endDirection = `V -> `East
         //Light specs
-        stLightDir = `S0 -> `Light -> `North + `S1 -> `Light -> `North
-        stLightColor = `S0 -> `Light -> `Green + `S1 -> `Light -> `Green
+        stLightDir = `S0 -> `Light -> `North
+        stLightColor = `S0 -> `Light -> `Green 
     }
 
 
@@ -324,7 +325,8 @@ test suite for canTurn {
         stSide = `S0 -> `V -> `Near 
         stStartDir = `S0 -> `V -> `South 
         stEndDir = `S0 -> `V -> `West 
-
+        startDirection = `V -> `South
+        endDirection = `V -> `West
         //Light specs
         stLightDir = `S0 -> `Light -> `North 
         stLightColor = `S0 -> `Light -> `Green 

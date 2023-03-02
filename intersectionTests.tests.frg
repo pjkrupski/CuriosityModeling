@@ -142,7 +142,7 @@ test suite for canCross {
     }
 
     //Car stays in place on Green light 
-    example validTransition4 is not {some pre, post: State | canCross[pre, post]} for {
+    example invalidTransition1 is not {some pre, post: State | canCross[pre, post]} for {
         //Sig and object names need to be different if using js visualization
         //Test Setup
         State = `S0 + `S1 
@@ -186,7 +186,7 @@ test suite for canCross {
     }
 
     //Car goes through red light
-    example invalidTransition1 is not {some pre, post: State | canCross[pre, post]} for {
+    example invalidTransition2 is not {some pre, post: State | canCross[pre, post]} for {
         //Sig and object names need to be different if using js visualization
         //Test Setup
         State = `S0 + `S1 

@@ -47,23 +47,23 @@ rules:
 
 
 Edge cases: 
-After testing this model we discovered multiple scenarios that were being aloud that we had not initially thought of. For cases such as this we tried to stay as close as possible to how things work in an actual traffic light. Some examples are
-A vehicle can make a U-turn and proceed in the opposite direction
-A vehicle can chose not to go when the light turns green 
+After testing this model we discovered multiple scenarios that were being aloud that we had not initially thought of. For cases such as this we tried to stay as close as possible to how things work in an actual traffic light. Some examples that we updated were
+A vehicle can not make a U-turn and proceed in the opposite direction
+A vehicle can not chose not to go when the light turns green 
 
 
 
 
 Expectations in Sterling:
 //Traces
-run {
-     wellformedVehicle
-     wellformedLight
-     wellformedCrosswalk
-     canCross
- } for exactly 5 State, exactly 5 Vehicle, exactly 4 Light, exactly 2 Crosswalk
-   for {next is linear}
-   
+When using the run statement in intersection.frg, tables are displayed in sterling that show the various 
+properties of our state. This can be interpreted by seeing what a vehicles start and end direction are 
+which indicates what direction its driving, next the corresponding light can be checked to see if the
+vehicle would be allowed to cross the intersection either by going straight or taking a turn.
+
+The Near and Far sigs on the vehicle position are what indicate that the vehicle has actually moved.
+These proeprties were very useful when running multiple traces to find if there were times the vehicle
+was moving when it shouldn't have been or if it didnt move when it should have.   
    
    
    

@@ -36,8 +36,8 @@ sig State {
     stEndDir: pfunc Vehicle -> Direction,
     stSide: pfunc Vehicle -> Position,
     stLightColor: pfunc Light -> Color,
-    stLightDir: pfunc Light -> Direction
-    stRightArrColor: pfunc Light -> Color
+    stLightDir: pfunc Light -> Direction,
+    stRightArrColor: pfunc Light -> Color,
     stLeftArrColor: pfunc Light -> Color
 }
 
@@ -294,3 +294,21 @@ pred wellformedCrosswalk {
         }
     }
 }
+
+//Traces
+run {
+     wellformedVehicle
+     wellformedLight
+     wellformedCrosswalk
+     canCross
+ } for exactly 5 State, exactly 5 Vehicle, exactly 4 Light, exactly 2 Crosswalk
+   for {next is linear}
+
+
+
+
+
+
+
+
+
